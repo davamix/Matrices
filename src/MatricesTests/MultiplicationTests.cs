@@ -22,6 +22,12 @@ namespace MatricesTests
                                              {6, 2}
                                          };
 
+        private static int[,] MatrixB_Reverse => new[,]
+                                                 {
+                                                     {1, 6},
+                                                     {3, 2}
+                                                 };
+
         private static int[,] MatrixC => new[,]
                                          {
                                              {2, 5, 6},
@@ -58,6 +64,23 @@ namespace MatricesTests
         {
             Assert.Equal(_multiplication.AreCompatible(m1, m2), areCompatible);
         }
+
+        private static IEnumerable<object[]> GetMatricesToMultiplyWithReverse()
+        {
+            return new[]
+                   {
+                       new object[] {MatrixA, MatrixA},
+                       new object[] {MatrixB, MatrixB_Reverse}
+                   };
+        }
+        [Theory]
+        [MemberData(nameof(GetMatricesToMultiplyWithReverse))]
+        public void GetValuesToMultiply()
+        {
+            //Create a function to check each value in the matrix, same position.
+            // for MatrixB and MatrixB_Reverse
+        }
+
 
         [Fact]
         public void GetValuesToMultiplyFromMatrixA()
