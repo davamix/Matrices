@@ -49,21 +49,17 @@ namespace MatricesTests
             _multiplication = new Multiplication();
         }
 
+        #region Input data functions
+
         private static IEnumerable<object[]> GetMatricesToCheckCompatibility()
         {
+            // {Matrix 1, Matrix 2, isCompatible}
             return new[]
                    {
                        new object[] {MatrixA, MatrixB, true},
                        new object[] {MatrixA, MatrixC, false},
                        new object[] {MatrixC, MatrixD, true}
                    };
-        }
-
-        [Theory]
-        [MemberData(nameof(GetMatricesToCheckCompatibility))]
-        public void AreMatrixCompatible(int[,] m1, int[,] m2, bool areCompatible)
-        {
-            Assert.Equal(_multiplication.AreCompatible(m1, m2), areCompatible);
         }
 
         private static IEnumerable<object[]> GetMatricesToMultiplyWithReverse()
@@ -77,6 +73,16 @@ namespace MatricesTests
                        new object[] {MatrixB, MatrixB_Reverse, false}
                    };
         }
+
+        #endregion
+
+        [Theory]
+        [MemberData(nameof(GetMatricesToCheckCompatibility))]
+        public void AreMatrixCompatible(int[,] m1, int[,] m2, bool areCompatible)
+        {
+            Assert.Equal(_multiplication.AreCompatible(m1, m2), areCompatible);
+        }
+
         [Theory]
         [MemberData(nameof(GetMatricesToMultiplyWithReverse))]
         public void GetValuesToMultiply(int[,] m1, int[,] m2, bool isFirstMatrix)

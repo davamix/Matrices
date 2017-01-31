@@ -9,12 +9,38 @@ namespace Matrices
     {
         public Multiplication()
         {
-        }
+            return;
 
-        private void Multiply(int[,] m1, int[,] m2)
+            // Steps
+
+            int[,] m1 = new int[,] {};
+            int[,] m2 = new int[,] {};
+
+            if (AreCompatible(m1, m2))
+            {
+                var valuesM1 = GetValuesToMultiply(m1, true);
+                var valuesM2 = GetValuesToMultiply(m2, false);
+
+                // TODO: Do the calculation for each array in the same dimension of the matrices
+                var result = Multiply(valuesM1, valuesM2);
+            }
+        }
+        private int[,] Multiply(int[,] m1, int[,] m2)
         {
-            //if (AreCompatible(m1, m2))
-                //GetValuesToMultiply
+            var result = new int[,] {};
+
+            var dimensions = m1.Rank;
+
+            for (var d = 0; d < dimensions; d++)
+            {
+                for (var x = 0; x < m1.GetLength(d); x++)
+                {
+                    // Multiply same index on both arrays and sum the values
+                    // try to do some recursivity stuff.
+                }
+            }
+
+            return result;
         }
 
         /// <summary>
@@ -28,6 +54,12 @@ namespace Matrices
             return lengthM1 == lengthM2;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="matrix"></param>
+        /// <param name="isFirstMatrix"></param>
+        /// <returns></returns>
         public int[,] GetValuesToMultiply(int[,] matrix, bool isFirstMatrix)
         {
             if (isFirstMatrix)
