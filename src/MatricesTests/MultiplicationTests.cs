@@ -81,7 +81,6 @@ namespace MatricesTests
         [MemberData(nameof(GetMatricesToMultiplyWithReverse))]
         public void GetValuesToMultiply(int[,] m1, int[,] m2, bool isFirstMatrix)
         {
-            // Get the values to be multiplied from matrix 1
             var valuesM1 = _multiplication.GetValuesToMultiply(m1, isFirstMatrix);
 
             Assert.True(CompareMatricesValues(valuesM1, m2));
@@ -90,7 +89,7 @@ namespace MatricesTests
         #region Auxiliar functions
 
         /// <summary>
-        /// Compare the values of two matrices
+        /// Compare the values of two matrices. http://stackoverflow.com/a/12446807
         /// </summary>
         /// <returns>TRUE if all values are equal; otherwise return FALSE</returns>
         private bool CompareMatricesValues(int[,] m1, int[,] m2)
