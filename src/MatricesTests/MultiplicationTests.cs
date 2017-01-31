@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Matrices;
 using Xunit;
 
@@ -43,7 +44,7 @@ namespace MatricesTests
                                          };
 
 
-    public MultiplicationTests()
+        public MultiplicationTests()
         {
             _multiplication = new Multiplication();
         }
@@ -67,25 +68,40 @@ namespace MatricesTests
 
         private static IEnumerable<object[]> GetMatricesToMultiplyWithReverse()
         {
+            // {Matrix values, Matrix result, is first matrix}
             return new[]
                    {
-                       new object[] {MatrixA, MatrixA},
-                       new object[] {MatrixB, MatrixB_Reverse}
+                       //First matrix
+                       new object[] {MatrixA, MatrixA, true},
+                       //Second matrix
+                       new object[] {MatrixB, MatrixB_Reverse, false}
                    };
         }
         [Theory]
         [MemberData(nameof(GetMatricesToMultiplyWithReverse))]
-        public void GetValuesToMultiply()
+        public void GetValuesToMultiply(int[,] m1, int[,] m2, bool isFirstMatrix)
         {
-            //Create a function to check each value in the matrix, same position.
-            // for MatrixB and MatrixB_Reverse
+            // Get the values to be multiplied from matrix 1
+            var valuesM1 = _multiplication.GetValuesToMultiply(m1, isFirstMatrix);
+
+            Assert.True(CompareMatricesValues(valuesM1, m2));
         }
 
+        #region Auxiliar functions
 
-        [Fact]
-        public void GetValuesToMultiplyFromMatrixA()
+        /// <summary>
+        /// Compare the values of two matrices
+        /// </summary>
+        /// <returns>TRUE if all values are equal; otherwise return FALSE</returns>
+        private bool CompareMatricesValues(int[,] m1, int[,] m2)
         {
-            Assert.Equal(4, 2 + 2);
+            return m1.Rank == m2.Rank
+                   && Enumerable.Range(0, m1.Rank)
+                                .All(dimension => m1.GetLength(dimension) == m2.GetLength(dimension))
+                   && m1.Cast<int>().SequenceEqual(m2.Cast<int>());
+
         }
+
+        #endregion
     }
 }
