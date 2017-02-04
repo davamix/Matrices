@@ -62,23 +62,7 @@ namespace MatricesTests
                    };
         }
 
-        #endregion
-
-        [Theory]
-        [MemberData(nameof(GetMatricesToCheckCompatibility))]
-        public void AreMatrixCompatible(int[,] m1, int[,] m2, bool areCompatible)
-        {
-            Assert.Equal(_multiplication.AreCompatible(m1, m2), areCompatible);
-        }
-
-        [Fact]
-        public void GetValuesToMultiply()
-        {
-            var transposed = _multiplication.TransposeMatrix(MatrixB);
-
-            Assert.True(CompareMatricesValues(transposed, MatrixB_Transposed));
-        }
-
+        // Get the array of values from the first row of MatrixA and MatrixB_Transposed
         private static IEnumerable<object[]> GetDataToCalculateFirstValueOfMatrixT()
         {
             var arrayMA = new int[MatrixA.GetLength(1)];
@@ -97,13 +81,72 @@ namespace MatricesTests
                    };
         }
 
+        private static IEnumerable<object[]> GetDataToGetArrayOfFirstRowFromMatrixA()
+        {
+            var row = 0;
+            var array = new[] {3, 4};
+
+            return new[]
+                   {
+                       new object[] {MatrixA, row, array}
+                   };
+        }
+
+        private static IEnumerable<object[]> GetDataToMultiplyMatrixAWithMatrixBt()
+        {
+            var matrixT = new[,]
+                          {
+                              {27, 17},
+                              {32, 16}
+                          };
+
+            return new[]
+                   {
+                       new object[] {MatrixA, MatrixB_Transposed, matrixT}
+                   };
+        }
+
+        #endregion
+
+        [Theory]
+        [MemberData(nameof(GetMatricesToCheckCompatibility))]
+        public void AreMatrixCompatible(int[,] m1, int[,] m2, bool areCompatible)
+        {
+            Assert.Equal(_multiplication.AreCompatible(m1, m2), areCompatible);
+        }
+
+        [Fact]
+        public void GetValuesToMultiply()
+        {
+            var transposed = _multiplication.TransposeMatrix(MatrixB);
+
+            Assert.True(CompareMatricesValues(transposed, MatrixB_Transposed));
+        }
+
         [Theory]
         [MemberData(nameof(GetDataToCalculateFirstValueOfMatrixT))]
         public void CalculateFirstValueOfMatrixT(int[] arrayA, int[] arrayBt, int total)
         {
-            var value = _multiplication.CalculateArrays(arrayA, arrayBt);
+            var value = _multiplication.CalculateArrayValues(arrayA, arrayBt);
 
             Assert.Equal(total, value);
+        }
+
+        [Theory]
+        [MemberData(nameof(GetDataToGetArrayOfFirstRowFromMatrixA))]
+        public void GetArrayOfFirstRowFromMatrixA(int[,] matrix,int row, int[] expected)
+        {
+            var result = _multiplication.GetArrayFromRow(matrix, row);
+            Assert.True(expected.SequenceEqual(result));
+        }
+
+        [Theory]
+        [MemberData(nameof(GetDataToMultiplyMatrixAWithMatrixBt))]
+        public void MultiplyMatrixAWithMatrixBt(int[,] matrixA, int[,] matrixBt, int[,] matrixT)
+        {
+            var result = _multiplication.Multiply(matrixA, matrixBt);
+
+            Assert.True(CompareMatricesValues(matrixT, result));
         }
 
         #region Auxiliar functions
