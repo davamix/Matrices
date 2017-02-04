@@ -13,13 +13,17 @@ namespace Matrices
 
             // Steps
 
-            int[,] m1 = new int[,] { };
-            int[,] m2 = new int[,] { };
+            // Create two matrices to multiply
+            var m1 = new int[,] { };
+            var m2 = new int[,] { };
 
+            // Cheak if the two matrices are compatible
             if (AreCompatible(m1, m2))
             {
+                // Transpose the second matrix
                 var transposeM2 = TransposeMatrix(m2);
 
+                // Multiply both matrices, the first and original and the second but transposed
                 var result = Multiply(m1, transposeM2);
             }
         }
