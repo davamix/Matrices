@@ -23,7 +23,7 @@ namespace MatricesTests
                                              {6, 2}
                                          };
 
-        private static int[,] MatrixB_Reverse => new[,]
+        private static int[,] MatrixB_Transposed => new[,]
                                                  {
                                                      {1, 6},
                                                      {3, 2}
@@ -62,18 +62,6 @@ namespace MatricesTests
                    };
         }
 
-        private static IEnumerable<object[]> GetMatricesToMultiplyWithReverse()
-        {
-            // {Matrix values, Matrix result, is first matrix}
-            return new[]
-                   {
-                       //First matrix
-                       new object[] {MatrixA, MatrixA, true},
-                       //Second matrix
-                       new object[] {MatrixB, MatrixB_Reverse, false}
-                   };
-        }
-
         #endregion
 
         [Theory]
@@ -83,13 +71,39 @@ namespace MatricesTests
             Assert.Equal(_multiplication.AreCompatible(m1, m2), areCompatible);
         }
 
-        [Theory]
-        [MemberData(nameof(GetMatricesToMultiplyWithReverse))]
-        public void GetValuesToMultiply(int[,] m1, int[,] m2, bool isFirstMatrix)
+        [Fact]
+        public void GetValuesToMultiply()
         {
-            var valuesM1 = _multiplication.GetValuesToMultiply(m1, isFirstMatrix);
+            var transposed = _multiplication.TransposeMatrix(MatrixB);
 
-            Assert.True(CompareMatricesValues(valuesM1, m2));
+            Assert.True(CompareMatricesValues(transposed, MatrixB_Transposed));
+        }
+
+        private static IEnumerable<object[]> GetDataToCalculateFirstValueOfMatrixT()
+        {
+            var arrayMA = new int[MatrixA.GetLength(1)];
+            var arrayBt = new int[MatrixB_Transposed.GetLength(1)];
+            var total = 27;
+
+            for (int x = 0; x < MatrixA.GetLength(1); x++)
+            {
+                arrayMA[x] = MatrixA[0, x];
+                arrayBt[x] = MatrixB_Transposed[0, x];
+            }
+
+            return new[]
+                   {
+                       new object[] {arrayMA, arrayBt, total}
+                   };
+        }
+
+        [Theory]
+        [MemberData(nameof(GetDataToCalculateFirstValueOfMatrixT))]
+        public void CalculateFirstValueOfMatrixT(int[] arrayA, int[] arrayBt, int total)
+        {
+            var value = _multiplication.CalculateArrays(arrayA, arrayBt);
+
+            Assert.Equal(total, value);
         }
 
         #region Auxiliar functions

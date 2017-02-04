@@ -13,21 +13,20 @@ namespace Matrices
 
             // Steps
 
-            int[,] m1 = new int[,] {};
-            int[,] m2 = new int[,] {};
+            int[,] m1 = new int[,] { };
+            int[,] m2 = new int[,] { };
 
             if (AreCompatible(m1, m2))
             {
-                var valuesM1 = GetValuesToMultiply(m1, true);
-                var valuesM2 = GetValuesToMultiply(m2, false);
+                var transposeM2 = TransposeMatrix(m2);
 
                 // TODO: Do the calculation for each array in the same dimension of the matrices
-                var result = Multiply(valuesM1, valuesM2);
+                var result = Multiply(m1, transposeM2);
             }
         }
         private int[,] Multiply(int[,] m1, int[,] m2)
         {
-            var result = new int[,] {};
+            var result = new int[,] { };
 
             var dimensions = m1.Rank;
 
@@ -43,6 +42,8 @@ namespace Matrices
             return result;
         }
 
+        
+
         /// <summary>
         /// The number of columns of the first matrix must equal the number of rows of the second
         /// </summary>
@@ -54,21 +55,7 @@ namespace Matrices
             return lengthM1 == lengthM2;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="matrix"></param>
-        /// <param name="isFirstMatrix"></param>
-        /// <returns></returns>
-        public int[,] GetValuesToMultiply(int[,] matrix, bool isFirstMatrix)
-        {
-            if (isFirstMatrix)
-                return matrix;
-
-            return GetValuesToMultiplyFromSecondMatrix(matrix);
-        }
-
-        private int[,] GetValuesToMultiplyFromSecondMatrix(int[,] matrix)
+        public int[,] TransposeMatrix(int[,] matrix)
         {
             var rows = matrix.GetLength(0);
             var columns = matrix.GetLength(1);
@@ -84,6 +71,26 @@ namespace Matrices
             }
 
             return newMatrix;
+        }
+
+        /// <summary>
+        /// Multiply the values with the same indexes on both arrays 
+        /// and sum the value with the calculation of the next index
+        /// </summary>
+        /// <param name="rowM1">Row of the first matrix</param>
+        /// <param name="rowMt">Row of the second matrix (transposed matrix) </param>
+        /// <param name="index">Index od the array to make calculations. Start at 0</param>
+        /// <returns>Calculated value for correlated rows in matrices</returns>
+        public int CalculateArrays(int[] rowM1, int[] rowMt, int index = 0)
+        {
+            var total = 0;
+
+            if (index < rowM1.Length - 1)
+                total = CalculateArrays(rowM1, rowMt, index + 1);
+
+            total += rowM1[index] * rowMt[index];
+
+            return total;
         }
     }
 }
