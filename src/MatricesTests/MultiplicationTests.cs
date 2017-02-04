@@ -29,6 +29,12 @@ namespace MatricesTests
                                                      {3, 2}
                                                  };
 
+        private static int[,] MatrixAxB_Transposed => new[,]
+                                                      {
+                                                          {27, 17},
+                                                          {32, 16}
+                                                      };
+
         private static int[,] MatrixC => new[,]
                                          {
                                              {2, 5, 6},
@@ -92,20 +98,6 @@ namespace MatricesTests
                    };
         }
 
-        private static IEnumerable<object[]> GetDataToMultiplyMatrixAWithMatrixBt()
-        {
-            var matrixT = new[,]
-                          {
-                              {27, 17},
-                              {32, 16}
-                          };
-
-            return new[]
-                   {
-                       new object[] {MatrixA, MatrixB_Transposed, matrixT}
-                   };
-        }
-
         #endregion
 
         [Theory]
@@ -140,13 +132,12 @@ namespace MatricesTests
             Assert.True(expected.SequenceEqual(result));
         }
 
-        [Theory]
-        [MemberData(nameof(GetDataToMultiplyMatrixAWithMatrixBt))]
-        public void MultiplyMatrixAWithMatrixBt(int[,] matrixA, int[,] matrixBt, int[,] matrixT)
+        [Fact]
+        public void MultiplyMatrixAWithMatrixBt()
         {
-            var result = _multiplication.Multiply(matrixA, matrixBt);
+            var result = _multiplication.Multiply(MatrixA, MatrixB_Transposed);
 
-            Assert.True(CompareMatricesValues(matrixT, result));
+            Assert.True(CompareMatricesValues(MatrixAxB_Transposed, result));
         }
 
         #region Auxiliar functions
